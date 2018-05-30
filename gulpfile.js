@@ -5,13 +5,14 @@ const rollup = require('rollup');
 const del = require('del');
 const babel = require('rollup-plugin-babel');
 const replace = require('rollup-plugin-replace');
+const { uglify } = require('rollup-plugin-uglify');
 const pkg = require('./package.json');
 
 const DIST = 'lib';
 const IS_PROD = process.env.NODE_ENV === 'production';
 const values = {
   'process.env.VERSION': pkg.version,
-  'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+  'process.env.NODE_ENV': process.env.NODE_ENV || 'development',
 };
 
 
@@ -36,11 +37,42 @@ const rollupConfig = [
     },
     output: {
       ...commonConfig.output,
-      format: 'cjs',
+      format: 'umd',
+      name: 'JSX',
       file: `${DIST}/index.js`,
+    },
+    minify: true,
+  },
+  {
+    input: {
+      ...commonConfig.input,
+      input: 'src/index.js',
+    },
+    output: {
+      ...commonConfig.output,
+      format: 'cjs',
+      file: `${DIST}/index.cjs.js`,
     },
   },
 ];
+// Generate minified versions
+Array.from(rollupConfig)
+.filter(({ minify }) => minify)
+.forEach(config => {
+  rollupConfig.push({
+    input: {
+      ...config.input,
+      plugins: [
+        ...config.input.plugins,
+        uglify(),
+      ],
+    },
+    output: {
+      ...config.output,
+      file: config.output.file.replace(/\.js$/, '.min.js'),
+    },
+  });
+});
 
 function clean() {
   return del(DIST);

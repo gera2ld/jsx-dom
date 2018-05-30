@@ -6,13 +6,14 @@
   "license": "ISC",
   "scripts": {
     "dev": "gulp dev",
-    "prebuild": "yarn lint && gulp clean",
+    "prebuild": "npm run lint && gulp clean",
     "build": "cross-env NODE_ENV=production gulp build",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prepublish": "npm run build"
   },
   "husky": {
     "hooks": {
-      "pre-push": "yarn lint"
+      "pre-push": "npm run lint"
     }
   },
   "devDependencies": {
@@ -30,8 +31,10 @@
     "husky": "^1.0.0-rc.8",
     "rollup": "^0.59.4",
     "rollup-plugin-babel": "^4.0.0-beta.4",
-    "rollup-plugin-replace": "^2.0.0"
+    "rollup-plugin-replace": "^2.0.0",
+    "rollup-plugin-uglify": "^4.0.0"
   },
-  "main": "lib/index.js",
+  "main": "lib/index.cjs.js",
+  "unpkg": "lib/index.js",
   "repository": "git@github.com:gera2ld/jsx-dom.git"
 }
