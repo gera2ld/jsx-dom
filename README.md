@@ -1,10 +1,10 @@
 # @gera2ld/jsx-dom
 
-![NPM](https://img.shields.io/npm/v/@gera2ld/jsx-dom.svg)
+[![NPM](https://img.shields.io/npm/v/@gera2ld/jsx-dom.svg)](https://npm.im/@gera2ld/jsx-dom)
 ![License](https://img.shields.io/npm/l/@gera2ld/jsx-dom.svg)
 ![Downloads](https://img.shields.io/npm/dt/@gera2ld/jsx-dom.svg)
 
-This is an ES6 project built with yeoman and generator-rollup.
+Use JSX for HTML elements.
 
 ## Usage
 

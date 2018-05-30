@@ -16,6 +16,10 @@
       "pre-push": "npm run lint"
     }
   },
+  "keywords": [
+    "jsx",
+    "dom"
+  ],
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.49",
     "@babel/preset-env": "^7.0.0-beta.49",
