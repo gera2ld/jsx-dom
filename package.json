@@ -4,6 +4,9 @@
   "description": "Use JSX for HTML elements.",
   "author": "Gerald <i@gerald.top>",
   "license": "ISC",
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "dev": "gulp dev",
     "prebuild": "npm run lint && gulp clean",

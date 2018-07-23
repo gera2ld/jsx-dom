@@ -1,7 +1,8 @@
-const propNames = [
+const propRules = [
   'innerHTML',
   'innerText',
   'textContent',
+  { key: 'value', tag: 'textarea' },
 ];
 
 export default function createElement(tag, props, ...children) {
@@ -24,7 +25,7 @@ export default function createElement(tag, props, ...children) {
       } else if (typeof value === 'boolean') {
         if (value) el.setAttribute(key, key);
         else el.removeAttribute(key);
-      } else if (propNames.indexOf(key) >= 0) {
+      } else if (matchProps(tag, key, value)) {
         el[key] = value;
       } else {
         if (key === 'className') key = 'class';
@@ -36,6 +37,19 @@ export default function createElement(tag, props, ...children) {
   renderChild(el, children);
   if (ref) ref(el);
   return el;
+}
+
+function matchProps(tag, key, value) {
+  return propRules.some(rule => {
+    if (!rule) return false;
+    if (typeof rule === 'string') return key === rule;
+    const ctx = {
+      tag,
+      key,
+      value,
+    };
+    return Object.keys(rule).every(rk => rule[rk] === ctx[rk]);
+  });
 }
 
 function renderChild(el, child) {
