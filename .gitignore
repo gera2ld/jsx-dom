@@ -2,4 +2,7 @@ node_modules
 *.log
 *.lock
 /.idea
-/lib
+/dist
+/.nyc_output
+/coverage
+/types

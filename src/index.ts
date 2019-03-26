@@ -5,7 +5,7 @@ const propRules = [
   { key: 'value', tag: 'textarea' },
 ];
 
-export default function createElement(tag, props, ...children) {
+export default function createElement(tag: string, props?: object, ...children) {
   const el = document.createElement(tag);
   let ref;
   if (props) {
@@ -39,7 +39,7 @@ export default function createElement(tag, props, ...children) {
   return el;
 }
 
-function matchProps(tag, key, value) {
+function matchProps(tag: string, key: string, value) {
   return propRules.some(rule => {
     if (!rule) return false;
     if (typeof rule === 'string') return key === rule;
@@ -52,7 +52,7 @@ function matchProps(tag, key, value) {
   });
 }
 
-function renderChild(el, child) {
+function renderChild(el: HTMLElement, child) {
   if (Array.isArray(child)) {
     child.forEach(ch => renderChild(el, ch));
     return;
@@ -65,7 +65,7 @@ function renderChild(el, child) {
   }
 }
 
-function renderStyle(el, style) {
+function renderStyle(el: HTMLElement, style: object) {
   Object.keys(style).forEach(key => {
     const value = style[key];
     if (typeof value === 'number') el.style[key] = `${value}px`;
