@@ -1,9 +1,10 @@
 const rollup = require('rollup');
 const { uglify } = require('rollup-plugin-uglify');
-const { getRollupPlugins, getExternal } = require('./scripts/util');
+const { getRollupPlugins, getExternal, DIST } = require('./scripts/util');
+const pkg = require('./package.json');
 
-const DIST = 'dist';
 const FILENAME = 'index';
+const BANNER = `/*! ${pkg.name} v${pkg.version} | ${pkg.license} License */`;
 
 const external = getExternal();
 const rollupConfig = [
@@ -24,7 +25,7 @@ const rollupConfig = [
       plugins: getRollupPlugins({ browser: true }),
     },
     output: {
-      format: 'umd',
+      format: 'iife',
       file: `${DIST}/${FILENAME}.js`,
       name: 'JSX',
     },
@@ -39,7 +40,13 @@ rollupConfig.filter(({ minify }) => minify)
       ...config.input,
       plugins: [
         ...config.input.plugins,
-        uglify(),
+        uglify({
+          output: {
+            ...BANNER && {
+              preamble: BANNER,
+            },
+          },
+        }),
       ],
     },
     output: {
@@ -49,7 +56,17 @@ rollupConfig.filter(({ minify }) => minify)
   });
 });
 
-module.exports = rollupConfig.map(config => ({
-  ...config.input,
-  output: config.output,
+rollupConfig.forEach((item) => {
+  item.output = {
+    indent: false,
+    ...item.output,
+    ...BANNER && {
+      banner: BANNER,
+    },
+  };
+});
+
+module.exports = rollupConfig.map(({ input, output }) => ({
+  ...input,
+  output,
 }));
