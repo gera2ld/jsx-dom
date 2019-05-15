@@ -5,37 +5,58 @@ const propRules = [
   { key: 'value', tag: 'textarea' },
 ];
 
-export default function createElement(tag: string, props?: object, ...children) {
-  const el = document.createElement(tag);
+interface IComponent {
+  name?: string;
+}
+
+export const Fragment: IComponent = {
+  name: 'Fragment',
+};
+
+export function createElement(tag: string | IComponent, props?: object, ...children) {
+  let el;
   let ref;
-  if (props) {
-    Object.keys(props).forEach(key => {
-      const value = props[key];
-      if (value == null) return;
-      if (key.startsWith('on')) {
-        el.addEventListener(key.slice(2).toLowerCase(), value);
-      } else if (key === 'children') {
-        renderChild(el, value);
-      } else if (key === 'style' && typeof value === 'object') {
-        renderStyle(el, value);
-      } else if (key === 'dangerouslySetInnerHTML' && value) {
-        el.innerHTML = value.__html || ''; // eslint-disable-line no-underscore-dangle
-      } else if (key === 'ref' && typeof value === 'function') {
-        ref = value;
-      } else if (typeof value === 'boolean') {
-        if (value) el.setAttribute(key, key);
-        else el.removeAttribute(key);
-      } else if (matchProps(tag, key, value)) {
-        el[key] = value;
-      } else {
-        if (key === 'className') key = 'class';
-        else if (key === 'labelFor') key = 'for';
-        el.setAttribute(key, `${value}`);
-      }
-    });
+  if (tag === Fragment) {
+    el = document.createDocumentFragment();
+  } else if (typeof tag !== 'string') {
+    throw new Error(`Invalid element type: ${tag}`);
+  } else {
+    el = document.createElement(tag);
+    if (props) {
+      Object.keys(props).forEach(key => {
+        const value = props[key];
+        if (value == null) return;
+        if (key.startsWith('on')) {
+          el.addEventListener(key.slice(2).toLowerCase(), value);
+        } else if (key === 'children') {
+          renderChild(el, value);
+        } else if (key === 'style' && typeof value === 'object') {
+          renderStyle(el, value);
+        } else if (key === 'dangerouslySetInnerHTML' && value) {
+          el.innerHTML = value.__html || ''; // eslint-disable-line no-underscore-dangle
+        } else if (key === 'ref' && typeof value === 'function') {
+          ref = value;
+        } else if (typeof value === 'boolean') {
+          if (value) el.setAttribute(key, key);
+          else el.removeAttribute(key);
+        } else if (matchProps(tag, key, value)) {
+          el[key] = value;
+        } else {
+          if (key === 'className') key = 'class';
+          else if (key === 'labelFor') key = 'for';
+          el.setAttribute(key, `${value}`);
+        }
+      });
+    }
   }
   renderChild(el, children);
   if (ref) ref(el);
+  return el;
+}
+
+function createFragment(...children) {
+  const el = document.createDocumentFragment();
+  renderChild(el, children);
   return el;
 }
 
@@ -52,7 +73,7 @@ function matchProps(tag: string, key: string, value) {
   });
 }
 
-function renderChild(el: HTMLElement, child) {
+function renderChild(el: HTMLElement | DocumentFragment, child) {
   if (Array.isArray(child)) {
     child.forEach(ch => renderChild(el, ch));
     return;
