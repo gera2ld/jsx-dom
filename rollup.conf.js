@@ -17,6 +17,7 @@ const rollupConfig = [
     output: {
       format: 'cjs',
       file: `${DIST}/${FILENAME}.common.js`,
+      esModule: false,
     },
   },
   {
