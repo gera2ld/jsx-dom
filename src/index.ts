@@ -21,7 +21,7 @@ export function createElement(tag: string | IComponent, props?: object, ...child
   } else if (typeof tag !== 'string') {
     throw new Error(`Invalid element type: ${tag}`);
   } else {
-    el = document.createElement(tag);
+    el = createElement.createElement(tag);
     if (props) {
       Object.keys(props).forEach(key => {
         const value = props[key];
@@ -54,11 +54,7 @@ export function createElement(tag: string | IComponent, props?: object, ...child
   return el;
 }
 
-function createFragment(...children) {
-  const el = document.createDocumentFragment();
-  renderChild(el, children);
-  return el;
-}
+createElement.createElement = tag => document.createElement(tag);
 
 function matchProps(tag: string, key: string, value) {
   return propRules.some(rule => {
