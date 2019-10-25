@@ -15,7 +15,7 @@ $ yarn add eslint-plugin-react -D
 ```
 
 ```js
-import h from '@gera2ld/jsx-dom';
+import React from '@gera2ld/jsx-dom';
 
 document.body.appendChild(<div>hello</div>);
 ```
@@ -25,9 +25,7 @@ document.body.appendChild(<div>hello</div>);
 {
   // ...
   "plugins": [
-    ["@babel/plugin-transform-react-jsx", {
-      "pragma": "h",
-    }],
+    "@babel/plugin-transform-react-jsx",
   ],
 }
 ```
@@ -42,11 +40,6 @@ module.exports = {
   rules: {
     // ...
     'react/jsx-uses-react': 'error',
-  },
-  settings: {
-    react: {
-      pragma: 'h',
-    },
   },
 };
 ```
