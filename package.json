@@ -1,6 +1,6 @@
 {
   "name": "@gera2ld/jsx-dom",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Use JSX for HTML elements.",
   "author": "Gerald <i@gerald.top>",
   "license": "ISC",
