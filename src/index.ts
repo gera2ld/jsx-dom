@@ -5,23 +5,31 @@ const propRules = [
   { key: 'value', tag: 'textarea' },
 ];
 
-interface IComponent {
+interface JSXComponent {
   name?: string;
 }
 
-export const Fragment: IComponent = {
+export const Fragment: JSXComponent = {
   name: 'Fragment',
 };
 
-export function createElement(tag: string | IComponent, props?: object, ...children) {
-  let el;
-  let ref;
+export type JSXProps = {
+  [key: string]: any;
+};
+
+export type JSXElement = HTMLElement | DocumentFragment;
+export type JSXChild = string | boolean | JSXElement;
+
+export function createElement(tag: string | JSXComponent, props?: JSXProps, ...children: JSXChild[]): JSXElement {
+  let result: JSXElement;
+  let ref: (el: JSXElement) => void;
   if (tag === Fragment) {
-    el = document.createDocumentFragment();
+    result = document.createDocumentFragment();
   } else if (typeof tag !== 'string') {
     throw new Error(`Invalid element type: ${tag}`);
   } else {
-    el = createElement.createElement(tag);
+    const el = createElement.createElement(tag);
+    result = el;
     if (props) {
       Object.keys(props).forEach(key => {
         const value = props[key];
@@ -29,7 +37,7 @@ export function createElement(tag: string | IComponent, props?: object, ...child
         if (key.startsWith('on')) {
           el.addEventListener(key.slice(2).toLowerCase(), value);
         } else if (key === 'children') {
-          renderChild(el, value);
+          renderChildren(el, value);
         } else if (key === 'style' && typeof value === 'object') {
           renderStyle(el, value);
         } else if (key === 'dangerouslySetInnerHTML' && value) {
@@ -39,7 +47,7 @@ export function createElement(tag: string | IComponent, props?: object, ...child
         } else if (typeof value === 'boolean') {
           if (value) el.setAttribute(key, key);
           else el.removeAttribute(key);
-        } else if (matchProps(tag, key, value)) {
+        } else if (isProp(tag, key)) {
           el[key] = value;
         } else {
           if (key === 'className') key = 'class';
@@ -49,40 +57,36 @@ export function createElement(tag: string | IComponent, props?: object, ...child
       });
     }
   }
-  renderChild(el, children);
-  if (ref) ref(el);
-  return el;
+  renderChildren(result, children);
+  if (ref) ref(result);
+  return result;
 }
 
-createElement.createElement = tag => document.createElement(tag);
+createElement.createElement = (tag: string): HTMLElement => document.createElement(tag);
 
-function matchProps(tag: string, key: string, value) {
+function isProp(tag: string, key: string): boolean {
+  const ctx = {
+    tag,
+    key,
+  };
   return propRules.some(rule => {
-    if (!rule) return false;
     if (typeof rule === 'string') return key === rule;
-    const ctx = {
-      tag,
-      key,
-      value,
-    };
     return Object.keys(rule).every(rk => rule[rk] === ctx[rk]);
   });
 }
 
-function renderChild(el: HTMLElement | DocumentFragment, child) {
-  if (Array.isArray(child)) {
-    child.forEach(ch => renderChild(el, ch));
-    return;
-  }
-  if (child == null || child === false) return;
-  if (typeof child !== 'object') {
-    el.appendChild(document.createTextNode(`${child}`));
-  } else {
-    el.appendChild(child);
-  }
+function renderChildren(el: JSXElement, children: JSXChild[]): void {
+  children.forEach(child => {
+    if (child == null || child === false) return;
+    if (typeof child !== 'object') {
+      el.appendChild(document.createTextNode(`${child}`));
+    } else {
+      el.appendChild(child);
+    }
+  });
 }
 
-function renderStyle(el: HTMLElement, style: object) {
+function renderStyle(el: HTMLElement, style: { [key: string]: number | string }): void {
   Object.keys(style).forEach(key => {
     const value = style[key];
     if (typeof value === 'number') el.style[key] = `${value}px`;
