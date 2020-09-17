@@ -20,7 +20,11 @@ export type JSXProps = {
 export type JSXElement = HTMLElement | DocumentFragment;
 export type JSXChild = string | boolean | JSXElement;
 
-export function createElement(tag: string | JSXComponent, props?: JSXProps, ...children: JSXChild[]): JSXElement {
+export function createElement(
+  tag: string | JSXComponent,
+  props?: JSXProps,
+  ...children: JSXChild[]
+): JSXElement {
   let result: JSXElement;
   let ref: (el: JSXElement) => void;
   if (tag === Fragment) {
@@ -31,7 +35,7 @@ export function createElement(tag: string | JSXComponent, props?: JSXProps, ...c
     const el = createElement.createElement(tag);
     result = el;
     if (props) {
-      Object.keys(props).forEach(key => {
+      Object.keys(props).forEach((key) => {
         const value = props[key];
         if (value == null) return;
         if (key.startsWith('on')) {
@@ -69,14 +73,14 @@ function isProp(tag: string, key: string): boolean {
     tag,
     key,
   };
-  return propRules.some(rule => {
+  return propRules.some((rule) => {
     if (typeof rule === 'string') return key === rule;
-    return Object.keys(rule).every(rk => rule[rk] === ctx[rk]);
+    return Object.keys(rule).every((rk) => rule[rk] === ctx[rk]);
   });
 }
 
 function renderChildren(el: JSXElement, children: JSXChild[]): void {
-  children.forEach(child => {
+  children.forEach((child) => {
     if (child == null || child === false) return;
     if (typeof child !== 'object') {
       el.appendChild(document.createTextNode(`${child}`));
@@ -87,7 +91,7 @@ function renderChildren(el: JSXElement, children: JSXChild[]): void {
 }
 
 function renderStyle(el: HTMLElement, style: { [key: string]: number | string }): void {
-  Object.keys(style).forEach(key => {
+  Object.keys(style).forEach((key) => {
     const value = style[key];
     if (typeof value === 'number') el.style[key] = `${value}px`;
     else el.style[key] = value;
