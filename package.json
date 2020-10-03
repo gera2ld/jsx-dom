@@ -28,7 +28,8 @@
   "unpkg": "dist/index.js",
   "jsdelivr": "dist/index.js",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "main": "dist/index.common.js",
   "module": "dist/index.esm.js",
