@@ -18,7 +18,8 @@ export type JSXProps = {
 };
 
 export type JSXElement = HTMLElement | DocumentFragment;
-export type JSXChild = string | boolean | JSXElement;
+export type JSXSingleChild = string | boolean | JSXElement;
+export type JSXChild = JSXSingleChild | JSXSingleChild[];
 
 export function createElement(
   tag: string | JSXComponent,
@@ -82,6 +83,10 @@ function isProp(tag: string, key: string): boolean {
 function renderChildren(el: JSXElement, children: JSXChild[]): void {
   children.forEach((child) => {
     if (child == null || child === false) return;
+    if (Array.isArray(child)) {
+      renderChildren(el, child);
+      return;
+    }
     if (typeof child !== 'object') {
       el.appendChild(document.createTextNode(`${child}`));
     } else {
