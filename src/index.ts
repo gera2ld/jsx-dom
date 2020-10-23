@@ -5,13 +5,9 @@ const propRules = [
   { key: 'value', tag: 'textarea' },
 ];
 
-interface JSXComponent {
-  name?: string;
-}
+type JSXComponent = (props: JSXProps) => JSXElement;
 
-export const Fragment: JSXComponent = {
-  name: 'Fragment',
-};
+export const Fragment: JSXComponent = () => document.createDocumentFragment();
 
 export type JSXProps = {
   [key: string]: any;
@@ -28,8 +24,8 @@ export function createElement(
 ): JSXElement {
   let result: JSXElement;
   let ref: (el: JSXElement) => void;
-  if (tag === Fragment) {
-    result = document.createDocumentFragment();
+  if (typeof tag === 'function') {
+    result = tag(props || {});
   } else if (typeof tag !== 'string') {
     throw new Error(`Invalid element type: ${tag}`);
   } else {
