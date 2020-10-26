@@ -94,7 +94,6 @@ function renderChildren(el: JSXElement, children: JSXChild[]): void {
 function renderStyle(el: HTMLElement, style: { [key: string]: number | string }): void {
   Object.keys(style).forEach((key) => {
     const value = style[key];
-    if (typeof value === 'number') el.style[key] = `${value}px`;
-    else el.style[key] = value;
+    el.style[key] = value;
   });
 }
