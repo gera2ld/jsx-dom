@@ -16,3 +16,23 @@ test('mount', () => {
   expect(node).toBeInstanceOf(HTMLDivElement);
   expect(node.innerHTML).toEqual('hello, world');
 });
+
+test('ref', () => {
+  let span: HTMLElement;
+  const vnode = (
+    <div>
+      <span
+        ref={(el) => {
+          span = el;
+        }}
+      >
+        hello
+      </span>
+    </div>
+  );
+  const el = mount(vnode);
+  const node = el.node as HTMLElement;
+  expect(node).toBeInstanceOf(HTMLDivElement);
+  expect(span).toBeInstanceOf(HTMLSpanElement);
+  expect(span.innerHTML).toEqual('hello');
+});

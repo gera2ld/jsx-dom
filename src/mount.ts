@@ -31,7 +31,7 @@ export function mountAttributes(
   env: MountEnv
 ) {
   for (const key in props) {
-    if (key === 'key' || key === 'children') continue;
+    if (key === 'key' || key === 'children' || key === 'ref') continue;
     if (key.startsWith('on')) {
       domElement[key.toLowerCase()] = props[key];
     } else {
@@ -96,6 +96,8 @@ export function mount(
       childrenRef = mount(props.children, childEnv);
     }
     if (childrenRef != null) insertDom(node, childrenRef);
+    const { ref } = props;
+    if (typeof ref === 'function') ref(node);
     return {
       type: MOUNT_SINGLE,
       node,
