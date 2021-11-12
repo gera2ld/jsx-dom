@@ -4,7 +4,7 @@
 ![License](https://img.shields.io/npm/l/@gera2ld/jsx-dom.svg)
 ![Downloads](https://img.shields.io/npm/dt/@gera2ld/jsx-dom.svg)
 
-Use JSX for HTML elements.
+Use JSX for HTML/SVG elements.
 
 ## Usage
 
@@ -15,17 +15,21 @@ $ yarn add eslint-plugin-react -D
 ```
 
 ```js
-import React from '@gera2ld/jsx-dom';
+import { mount } from '@gera2ld/jsx-dom';
 
-document.body.appendChild(<div>hello</div>);
+const vdom = <div>hello</div>;
+document.body.appendChild(mount(vdom));
 ```
 
 ```js
 // .babelrc
 {
   // ...
-  "plugins": [
-    "@babel/plugin-transform-react-jsx",
+  "presets": [
+    [
+      "@babel/preset-react",
+      { "runtime": "automatic", "importSource": "@gera2ld/jsx-dom" }
+    ]
   ],
 }
 ```

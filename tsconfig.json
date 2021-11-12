@@ -7,9 +7,11 @@
     "emitDeclarationOnly": true,
     "outDir": "types",
     "allowSyntheticDefaultImports": true,
-    "jsx": "react"
+    "jsx": "preserve"
   },
-  "files": [
-    "src/index.ts"
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts",
+    "test/**/*.tsx"
   ]
 }

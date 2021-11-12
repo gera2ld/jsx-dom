@@ -21,7 +21,7 @@ const rollupConfig = [
     },
     output: {
       format: 'cjs',
-      file: `${DIST}/${FILENAME}.common.js`,
+      file: `${DIST}/${FILENAME}.cjs`,
     },
   },
   {
@@ -35,7 +35,7 @@ const rollupConfig = [
     },
     output: {
       format: 'esm',
-      file: `${DIST}/${FILENAME}.esm.js`,
+      file: `${DIST}/${FILENAME}.mjs`,
     },
   },
   {
