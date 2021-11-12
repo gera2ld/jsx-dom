@@ -31,7 +31,8 @@
   "module": "dist/index.esm.js",
   "files": [
     "dist",
-    "types"
+    "types",
+    "jsx-runtime.js"
   ],
   "devDependencies": {
     "@babel/preset-react": "^7.16.0",
