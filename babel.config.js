@@ -2,11 +2,11 @@ module.exports = {
   extends: require.resolve('@gera2ld/plaid/config/babelrc-base'),
   presets: [
     '@babel/preset-typescript',
+  ],
+  plugins: [
     [
-      '@babel/preset-react',
+      '@babel/plugin-transform-react-jsx',
       { runtime: 'automatic', importSource: __dirname + '/test' },
     ],
   ],
-  plugins: [
-  ].filter(Boolean),
 };

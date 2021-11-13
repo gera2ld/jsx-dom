@@ -35,7 +35,7 @@
     "jsx-runtime.js"
   ],
   "devDependencies": {
-    "@babel/preset-react": "^7.16.0",
+    "@babel/plugin-transform-react-jsx": "^7.16.0",
     "@gera2ld/plaid": "~2.4.0",
     "@gera2ld/plaid-common-ts": "~2.4.0",
     "@gera2ld/plaid-rollup": "~2.4.0",
