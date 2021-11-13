@@ -45,3 +45,10 @@ test('null', () => {
   const el = mountDom(vnode) as HTMLElement;
   expect(el.innerHTML).toEqual('hello ');
 });
+
+test('empty list', () => {
+  const vnode = <div>{[]}</div>;
+  const el = mountDom(vnode) as HTMLDivElement;
+  expect(el).toBeInstanceOf(HTMLDivElement);
+  expect(el.innerHTML).toEqual('');
+});

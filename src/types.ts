@@ -29,7 +29,7 @@ export interface VFunctionNode extends VNode {
   type: VFunction;
 }
 
-export type VChild = string | number | boolean | null | VNode;
+export type VChild = string | number | boolean | null | Node | VNode;
 export type VChildren = VChild | VChildren[];
 
 export interface MountEnv {

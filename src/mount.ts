@@ -1,5 +1,5 @@
 import { SVG_NS, NS_ATTRS, MOUNT_SINGLE, MOUNT_ARRAY } from './consts';
-import { isLeaf, isElement, isNonEmptyArray, isRenderFunction } from './h';
+import { isLeaf, isElement, isRenderFunction } from './h';
 import {
   VElementNode,
   VChildren,
@@ -132,7 +132,7 @@ export function mount(
       node,
     };
   }
-  if (isNonEmptyArray(vnode)) {
+  if (Array.isArray(vnode)) {
     return {
       type: MOUNT_ARRAY,
       children: (vnode as VChildren[]).map((child) => mount(child, env)),

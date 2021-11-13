@@ -3,8 +3,6 @@ import { VProps, VFunction, VChildren, VNode } from './types';
 
 export const EMPTY_OBJECT = {};
 
-export const isNonEmptyArray = (c: VChildren) =>
-  Array.isArray(c) && c.length > 0;
 export const isLeaf = (c: VChildren) =>
   typeof c === 'string' || typeof c === 'number';
 export const isElement = (c: VChildren) =>
