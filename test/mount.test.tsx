@@ -1,8 +1,8 @@
 import { mountDom } from '../src';
 
 test('createElement', () => {
-  const node = <div>hello, world</div>;
-  expect(node).toEqual({
+  const vnode = <div>hello, world</div>;
+  expect(vnode).toEqual({
     vtype: 1,
     type: 'div',
     props: { children: 'hello, world' },
@@ -33,4 +33,15 @@ test('ref', () => {
   expect(el).toBeInstanceOf(HTMLDivElement);
   expect(span).toBeInstanceOf(HTMLSpanElement);
   expect(span.innerHTML).toEqual('hello');
+});
+
+test('null', () => {
+  const vnode = <div>hello {null}</div>;
+  expect(vnode).toEqual({
+    vtype: 1,
+    type: 'div',
+    props: { children: ['hello ', null] },
+  });
+  const el = mountDom(vnode) as HTMLElement;
+  expect(el.innerHTML).toEqual('hello ');
 });

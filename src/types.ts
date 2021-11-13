@@ -1,4 +1,10 @@
-import { VType, MountType, VTYPE_ELEMENT, VTYPE_FUNCTION } from './consts';
+import {
+  VType,
+  VTYPE_ELEMENT,
+  VTYPE_FUNCTION,
+  MOUNT_SINGLE,
+  MOUNT_ARRAY,
+} from './consts';
 
 export interface VProps {
   [key: string]: any;
@@ -23,15 +29,24 @@ export interface VFunctionNode extends VNode {
   type: VFunction;
 }
 
-export type VChild = string | number | VNode;
+export type VChild = string | number | boolean | null | VNode;
 export type VChildren = VChild | VChildren[];
 
 export interface MountEnv {
   isSvg: boolean;
 }
 
-export interface MountResult {
-  type: MountType;
-  node?: HTMLElement | SVGElement | Text;
-  children?: MountResult | MountResult[];
+export type DomNode = HTMLElement | SVGElement | Text;
+export type DomResult = DomNode | DomResult[];
+
+export interface MountSingleResult {
+  type: typeof MOUNT_SINGLE;
+  node: DomNode | null;
 }
+
+export interface MountArrayResult {
+  type: typeof MOUNT_ARRAY;
+  children: MountResult[];
+}
+
+export type MountResult = MountSingleResult | MountArrayResult;
