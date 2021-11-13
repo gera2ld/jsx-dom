@@ -36,7 +36,7 @@ export interface MountEnv {
   isSvg: boolean;
 }
 
-export type DomNode = HTMLElement | SVGElement | Text;
+export type DomNode = Node;
 export type DomResult = DomNode | DomResult[];
 
 export interface MountSingleResult {

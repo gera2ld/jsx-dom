@@ -87,6 +87,12 @@ export function mount(
       node: null,
     };
   }
+  if (vnode instanceof Node) {
+    return {
+      type: MOUNT_SINGLE,
+      node: vnode,
+    };
+  }
   if (isRenderFunction(vnode)) {
     const { type, props } = vnode as VFunctionNode;
     const childVNode = type(props);
