@@ -1,4 +1,4 @@
-import { mount } from '../src';
+import { mountDom } from '../src';
 
 test('createElement', () => {
   const node = <div>hello, world</div>;
@@ -9,12 +9,11 @@ test('createElement', () => {
   });
 });
 
-test('mount', () => {
+test('mountDom', () => {
   const vnode = <div>hello, world</div>;
-  const el = mount(vnode);
-  const node = el.node as HTMLElement;
-  expect(node).toBeInstanceOf(HTMLDivElement);
-  expect(node.innerHTML).toEqual('hello, world');
+  const el = mountDom(vnode) as HTMLElement;
+  expect(el).toBeInstanceOf(HTMLDivElement);
+  expect(el.innerHTML).toEqual('hello, world');
 });
 
 test('ref', () => {
@@ -30,9 +29,8 @@ test('ref', () => {
       </span>
     </div>
   );
-  const el = mount(vnode);
-  const node = el.node as HTMLElement;
-  expect(node).toBeInstanceOf(HTMLDivElement);
+  const el = mountDom(vnode) as HTMLElement;
+  expect(el).toBeInstanceOf(HTMLDivElement);
   expect(span).toBeInstanceOf(HTMLSpanElement);
   expect(span.innerHTML).toEqual('hello');
 });

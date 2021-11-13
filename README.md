@@ -15,10 +15,10 @@ $ yarn add eslint-plugin-react -D
 ```
 
 ```js
-import { mount } from '@gera2ld/jsx-dom';
+import { mountDom } from '@gera2ld/jsx-dom';
 
 const vdom = <div>hello</div>;
-document.body.appendChild(mount(vdom));
+document.body.appendChild(mountDom(vdom));
 ```
 
 ```js

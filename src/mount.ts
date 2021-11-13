@@ -7,6 +7,7 @@ import {
   VProps,
   MountEnv,
   MountResult,
+  VChild,
 } from './types';
 
 const DEFAULT_ENV: MountEnv = {
@@ -112,4 +113,8 @@ export function mount(
   }
 
   throw new Error('mount: Invalid Vnode!');
+}
+
+export function mountDom(vnode: VChild) {
+  return mount(vnode).node;
 }
