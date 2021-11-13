@@ -52,3 +52,18 @@ test('empty list', () => {
   expect(el).toBeInstanceOf(HTMLDivElement);
   expect(el.innerHTML).toEqual('');
 });
+
+test('fragment', () => {
+  const vnode = (
+    <>
+      <div>1</div>
+      <div>2</div>
+    </>
+  );
+  const el = mountDom(vnode) as DocumentFragment;
+  expect(el).toBeInstanceOf(DocumentFragment);
+  expect(Array.from(el.children, (child) => child.outerHTML)).toEqual([
+    '<div>1</div>',
+    '<div>2</div>',
+  ]);
+});

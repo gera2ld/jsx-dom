@@ -1,5 +1,5 @@
 import { SVG_NS, NS_ATTRS, MOUNT_SINGLE, MOUNT_ARRAY } from './consts';
-import { isLeaf, isElement, isRenderFunction } from './h';
+import { isLeaf, isElement, isRenderFunction, Fragment } from './h';
 import {
   VElementNode,
   VChildren,
@@ -16,7 +16,10 @@ const DEFAULT_ENV: MountEnv = {
   isSvg: false,
 };
 
-export function insertDom(parent: HTMLElement | SVGElement, ref: MountResult) {
+export function insertDom(
+  parent: HTMLElement | SVGElement | DocumentFragment,
+  ref: MountResult
+) {
   if (ref.type === MOUNT_SINGLE) {
     if (ref.node != null) parent.append(ref.node);
   } else if (ref.type === MOUNT_ARRAY) {
@@ -95,6 +98,17 @@ export function mount(
   }
   if (isRenderFunction(vnode)) {
     const { type, props } = vnode as VFunctionNode;
+    if (type === Fragment) {
+      const node = document.createDocumentFragment();
+      if (props.children) {
+        const childrenRef = mount(props.children, env);
+        insertDom(node, childrenRef);
+      }
+      return {
+        type: MOUNT_SINGLE,
+        node,
+      };
+    }
     const childVNode = type(props);
     return mount(childVNode, env);
   }
