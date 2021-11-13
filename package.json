@@ -7,7 +7,7 @@
   "scripts": {
     "prepare": "husky install",
     "dev": "rollup -wc rollup.conf.js",
-    "build:types": "tsc",
+    "build:types": "tsc -p tsconfig.prod.json",
     "build:js": "rollup -c rollup.conf.js",
     "build": "run-s lint test clean build:*",
     "lint": "eslint --ext .ts,.tsx .",
