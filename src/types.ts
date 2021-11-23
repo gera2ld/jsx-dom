@@ -8,7 +8,7 @@ import {
 
 export interface VProps {
   [key: string]: any;
-  children: VChildren;
+  children?: VChildren;
 }
 
 export type VFunction = (props: VProps) => VNode;

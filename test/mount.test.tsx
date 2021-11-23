@@ -1,4 +1,4 @@
-import { mountDom } from '../src';
+import { mountDom, hm } from '../src';
 
 test('createElement', () => {
   const vnode = <div>hello, world</div>;
@@ -66,4 +66,15 @@ test('fragment', () => {
     '<div>1</div>',
     '<div>2</div>',
   ]);
+});
+
+test('hm', () => {
+  const el = hm(
+    'div',
+    {},
+    hm('span', {}, 'hello'),
+    hm('span', {}, 'world')
+  ) as HTMLDivElement;
+  expect(el).toBeInstanceOf(HTMLDivElement);
+  expect(el.innerHTML).toBe('<span>hello</span><span>world</span>');
 });
