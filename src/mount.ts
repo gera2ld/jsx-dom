@@ -1,5 +1,5 @@
 import { SVG_NS, NS_ATTRS, MOUNT_SINGLE, MOUNT_ARRAY } from './consts';
-import { isLeaf, isElement, isRenderFunction, Fragment } from './h';
+import { isLeaf, isElement, isRenderFunction, h, Fragment } from './h';
 import {
   VElementNode,
   VChildren,
@@ -183,4 +183,11 @@ export function mountDom(vnode: VChildren) {
     return flattenWithoutNull(vnode.map(mountDom));
   }
   return asDom(mount(vnode)) as DomNode;
+}
+
+/**
+ * Render and mount without returning VirtualDOM, useful when you don't need SVG support.
+ */
+export function hm(...args: Parameters<typeof h>) {
+  return mountDom(h(...args));
 }

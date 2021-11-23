@@ -6,6 +6,14 @@
 
 Use JSX for HTML/SVG elements.
 
+## Why virtual DOM?
+
+v1.x does not have virtual DOM, as a result all elements are mounted immediately and we can hardly decide if an element is or is not part of an SVG.
+
+v2.x introduces virtual DOM so that we can decide namespace of each node based on its parent.
+
+However if you do not need SVG support and expect simple usage as before, just set pragma/jsxFactory to `JSX.hm` instead of `JSX.h`.
+
 ## Usage
 
 ```sh
@@ -19,7 +27,6 @@ import { mountDom } from '@gera2ld/jsx-dom';
 
 // Create vdom
 const vdom = <div>hello</div>;
-
 // Mount as DOM element
 const dom = mountDom(vdom);
 
@@ -74,7 +81,7 @@ When using automatic runtime with Babel, you don't need to import any extra help
 
 Another option is to use classic runtime. Note that you need `import JSX from '@gera2ld/jsx-dom'` whereever JSX is used.
 
-```
+```json
 // .babelrc
 {
   // ...
@@ -100,4 +107,12 @@ Another option is to use classic runtime. Note that you need `import JSX from '@
     "jsxFragmentFactory": "JSX.Fragment",
   }
 }
+```
+
+If you don't need SVG support and want to omit `mountDom`, just replace `JSX.h` with `JSX.hm`:
+
+```js
+// pragma/jsxFactory set to "JSX.hm"
+
+document.body.append(<div>hello</div>);
 ```
