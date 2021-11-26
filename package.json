@@ -32,7 +32,8 @@
   "files": [
     "dist",
     "types",
-    "jsx-runtime.js"
+    "jsx-runtime.js",
+    "jsx-runtime.d.ts"
   ],
   "devDependencies": {
     "@babel/plugin-transform-react-jsx": "^7.16.0",
