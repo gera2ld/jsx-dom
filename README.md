@@ -116,3 +116,15 @@ If you don't need SVG support and want to omit `mountDom`, just replace `JSX.h` 
 
 document.body.append(<div>hello</div>);
 ```
+
+### Type Declaration
+
+```ts
+import { VNode, DomNode } from '@gera2ld/jsx-dom';
+
+declare global {
+  namespace JSX {
+    type Element = VNode; // use `DomNode` instead if you want to omit `mountDom` and set pragma to `JSX.hm`
+  }
+}
+```
