@@ -1,16 +1,6 @@
-import { SVG_NS, NS_ATTRS, MOUNT_SINGLE, MOUNT_ARRAY } from './consts';
+import { SVG_NS, NS_ATTRS } from './consts';
 import { isLeaf, isElement, isRenderFunction, h, Fragment } from './h';
-import {
-  VElementNode,
-  VChildren,
-  VFunctionNode,
-  VProps,
-  MountEnv,
-  MountResult,
-  DomNode,
-  DomResult,
-  VChild,
-} from './types';
+import { VElementNode, VChild, VFunctionNode, VProps, MountEnv } from './types';
 
 const DEFAULT_ENV: MountEnv = {
   isSvg: false,
@@ -18,17 +8,11 @@ const DEFAULT_ENV: MountEnv = {
 
 export function insertDom(
   parent: HTMLElement | SVGElement | DocumentFragment,
-  ref: MountResult
+  nodes: Node | Node[]
 ) {
-  if (ref.type === MOUNT_SINGLE) {
-    if (ref.node != null) parent.append(ref.node);
-  } else if (ref.type === MOUNT_ARRAY) {
-    (ref.children as MountResult[]).forEach((ch) => {
-      insertDom(parent, ch);
-    });
-  } else {
-    throw new Error(`Unkown ref type ${JSON.stringify(ref)}`);
-  }
+  if (!Array.isArray(nodes)) nodes = [nodes];
+  nodes = nodes.filter(Boolean);
+  if (nodes.length) parent.append(...nodes);
 }
 
 export function mountAttributes(
@@ -49,7 +33,12 @@ export function mountAttributes(
     } else if (key.startsWith('on')) {
       domElement[key.toLowerCase()] = props[key];
     } else {
-      setDOMAttribute(domElement, key, props[key], env.isSvg);
+      setDOMAttribute(
+        domElement,
+        key,
+        props[key] as string | boolean,
+        env.isSvg
+      );
     }
   }
 }
@@ -80,43 +69,34 @@ function setDOMAttribute(
   }
 }
 
-export function mount(
-  vnode: VChildren,
-  env: MountEnv = DEFAULT_ENV
-): MountResult {
+function mountChildren(children: VChild | VChild[], env: MountEnv) {
+  return Array.isArray(children)
+    ? children.map((child) => mount(child, env))
+    : mount(children, env);
+}
+
+export function mount(vnode: VChild, env: MountEnv = DEFAULT_ENV): Node {
   if (vnode == null || typeof vnode === 'boolean') {
-    return {
-      type: MOUNT_SINGLE,
-      node: null,
-    };
+    return null;
   }
   if (vnode instanceof Node) {
-    return {
-      type: MOUNT_SINGLE,
-      node: vnode,
-    };
+    return vnode;
   }
   if (isRenderFunction(vnode)) {
     const { type, props } = vnode as VFunctionNode;
     if (type === Fragment) {
       const node = document.createDocumentFragment();
       if (props.children) {
-        const childrenRef = mount(props.children, env);
-        insertDom(node, childrenRef);
+        const children = mountChildren(props.children, env);
+        insertDom(node, children);
       }
-      return {
-        type: MOUNT_SINGLE,
-        node,
-      };
+      return node;
     }
     const childVNode = type(props);
     return mount(childVNode, env);
   }
   if (isLeaf(vnode)) {
-    return {
-      type: MOUNT_SINGLE,
-      node: document.createTextNode(`${vnode}`),
-    };
+    return document.createTextNode(`${vnode}`);
   }
   if (isElement(vnode)) {
     let node: HTMLElement | SVGElement;
@@ -130,59 +110,27 @@ export function mount(
       node = document.createElementNS(SVG_NS, type);
     }
     mountAttributes(node, props, env);
-    let childrenRef: MountResult;
     if (props.children) {
       let childEnv = env;
       if (env.isSvg && type === 'foreignObject') {
         childEnv = Object.assign({}, childEnv, { isSvg: false });
       }
-      childrenRef = mount(props.children, childEnv);
+      const children = mountChildren(props.children, childEnv);
+      if (children != null) insertDom(node, children);
     }
-    if (childrenRef != null) insertDom(node, childrenRef);
     const { ref } = props;
     if (typeof ref === 'function') ref(node);
-    return {
-      type: MOUNT_SINGLE,
-      node,
-    };
-  }
-  if (Array.isArray(vnode)) {
-    return {
-      type: MOUNT_ARRAY,
-      children: (vnode as VChildren[]).map((child) => mount(child, env)),
-    };
+    return node;
   }
 
   throw new Error('mount: Invalid Vnode!');
 }
 
-function flattenWithoutNull<T>(array: (T | T[])[]): T[] {
-  let result = [];
-  for (let i = 0; i < array.length; i += 1) {
-    const item = array[i];
-    if (Array.isArray(item)) result = result.concat(flattenWithoutNull(item));
-    else if (item != null) result.push(item);
-  }
-  return result;
-}
-
-function asDom(result: MountResult): DomResult {
-  if (result.type === MOUNT_SINGLE) {
-    return result.node;
-  }
-  return result.children.map(asDom);
-}
-
 /**
  * Mount vdom as real DOM nodes.
  */
-export function mountDom(vnode: VChild): DomNode;
-export function mountDom(vnode: VChildren[]): DomNode[];
-export function mountDom(vnode: VChildren) {
-  if (Array.isArray(vnode)) {
-    return flattenWithoutNull(vnode.map(mountDom));
-  }
-  return asDom(mount(vnode)) as DomNode;
+export function mountDom(vnode: VChild) {
+  return mount(vnode);
 }
 
 /**

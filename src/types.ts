@@ -1,15 +1,15 @@
-import {
-  VType,
-  VTYPE_ELEMENT,
-  VTYPE_FUNCTION,
-  MOUNT_SINGLE,
-  MOUNT_ARRAY,
-} from './consts';
+import { VType, VTYPE_ELEMENT, VTYPE_FUNCTION } from './consts';
 
-export interface VProps {
-  [key: string]: any;
+export type VProps = {
+  ref?: (el: Node) => void;
+  innerHTML?: string;
+  innerText?: string;
+  textContent?: string;
+  dangerouslySetInnerHTML?: { __html: string };
   children?: VChildren;
-}
+} & {
+  [key: string]: string | boolean | ((...args: unknown[]) => unknown);
+};
 
 export type VFunction = (props: VProps) => VNode;
 
@@ -30,7 +30,7 @@ export interface VFunctionNode extends VNode {
 }
 
 export type VChild = string | number | boolean | null | Node | VNode;
-export type VChildren = VChild | VChildren[];
+export type VChildren = VChild | VChild[];
 
 export interface MountEnv {
   isSvg: boolean;
@@ -38,15 +38,3 @@ export interface MountEnv {
 
 export type DomNode = Node;
 export type DomResult = DomNode | DomResult[];
-
-export interface MountSingleResult {
-  type: typeof MOUNT_SINGLE;
-  node: DomNode | null;
-}
-
-export interface MountArrayResult {
-  type: typeof MOUNT_ARRAY;
-  children: MountResult[];
-}
-
-export type MountResult = MountSingleResult | MountArrayResult;
