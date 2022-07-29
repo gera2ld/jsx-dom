@@ -30,7 +30,7 @@ export interface VFunctionNode extends VNode {
 }
 
 export type VChild = string | number | boolean | null | Node | VNode;
-export type VChildren = VChild | VChild[];
+export type VChildren = VChild | VChildren[];
 
 export interface MountEnv {
   isSvg: boolean;

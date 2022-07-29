@@ -1,6 +1,13 @@
 import { SVG_NS, NS_ATTRS } from './consts';
 import { isLeaf, isElement, isRenderFunction, h, Fragment } from './h';
-import { VElementNode, VChild, VFunctionNode, VProps, MountEnv } from './types';
+import {
+  VElementNode,
+  VChild,
+  VChildren,
+  VFunctionNode,
+  VProps,
+  MountEnv,
+} from './types';
 
 const DEFAULT_ENV: MountEnv = {
   isSvg: false,
@@ -69,9 +76,13 @@ function setDOMAttribute(
   }
 }
 
-function mountChildren(children: VChild | VChild[], env: MountEnv) {
+function flatten<T>(arr: Array<T | T[]>): T[] {
+  return arr.reduce((prev: T[], item) => prev.concat(item), []) as T[];
+}
+
+function mountChildren(children: VChildren, env: MountEnv): Node | Node[] {
   return Array.isArray(children)
-    ? children.map((child) => mount(child, env))
+    ? flatten(children.map((child) => mountChildren(child, env)))
     : mount(children, env);
 }
 

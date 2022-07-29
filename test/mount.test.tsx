@@ -78,3 +78,21 @@ test('hm', () => {
   expect(el).toBeInstanceOf(HTMLDivElement);
   expect(el.innerHTML).toBe('<span>hello</span><span>world</span>');
 });
+
+test('nested arrays', () => {
+  const vnode = (
+    <div>
+      <div>
+        {[1, 2].map((i) => (
+          <span>{i}</span>
+        ))}
+      </div>
+      {[1, [2, [3, [4, 5]]]]}
+    </div>
+  );
+  const el = mountDom(vnode) as HTMLElement;
+  expect(el).toBeInstanceOf(HTMLElement);
+  expect(el.outerHTML).toEqual(
+    '<div><div><span>1</span><span>2</span></div>12345</div>'
+  );
+});
