@@ -34,9 +34,11 @@ export function mountAttributes(
     } else if (
       key === 'innerHTML' ||
       key === 'textContent' ||
-      key === 'innerText'
+      key === 'innerText' ||
+      (key === 'value' && ['textarea', 'select'].includes(domElement.tagName))
     ) {
-      domElement[key] = props[key];
+      const value = props[key];
+      if (value != null) domElement[key] = value;
     } else if (key.startsWith('on')) {
       domElement[key.toLowerCase()] = props[key];
     } else {
